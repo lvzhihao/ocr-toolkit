@@ -22,3 +22,17 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+*.swp
+*.swo
+*.swa
+
+main
+
+*.cache
+
+*.config.yaml
+*.ocr-toolkit.yaml
+
+bower_components
+node_modules
