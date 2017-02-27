@@ -53,12 +53,12 @@
     </div>
     <div class='tool-control'>
         <label class='flex-1'>水平偏移</label>
-        <input class='flex-2' type='range' min='-500' max='500' value='0' id='vControl' oninput='vImage(this.value);' />
+        <input class='flex-2' type='range' min='-2500' max='2500' value='0' id='vControl' oninput='vImage(this.value);' />
         <span id="vvalue">0</span>
     </div>
     <div class='tool-control'>
         <label class='flex-1'>垂直偏移</label>
-        <input class='flex-2' type='range' min='-500' max='500' value='0' id='hControl' oninput='hImage(this.value);' />
+        <input class='flex-2' type='range' min='-2500' max='2500' value='0' id='hControl' oninput='hImage(this.value);' />
         <span id="hvalue">0</span>
     </div>
     <div class='tool-control'>
@@ -74,6 +74,9 @@
     <div id="log" style="word-wrap: break-word;padding: 1rem;"></div>
     <div style="text-align: center;">
         <img id="preview" src="" style="border: 1px solid #cdcdcd;">
+    </div>
+    <div style="text-align: center;">
+        <canvas id="canvas"></canvas>
     </div>
 </body>
 <script src="/public/jquery/dist/jquery.min.js"></script>

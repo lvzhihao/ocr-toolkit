@@ -15,16 +15,32 @@ $( function () {
             'src': data.imgurl
         } );
         $( '#log' ).html( JSON.stringify( data.attr ) );
+        x = attr.map_w * 0.3 * -1
+        width = attr.map_w * 0.6
+        y = $( '#preview' ).height() * 0.84 * -1
+        height = $( '#preview' ).height() * 0.13
+        console.log(x, y, width, height)
+
+        var canvas = document.getElementById("canvas")
+        canvas.width = width / data.attr.scale
+        canvas.height = height / data.attr.scale
+        ctx = canvas.getContext('2d')
+        ctx.drawImage(document.getElementById('preview'), x / data.attr.scale, y / data.attr.scale);
+        console.log(x / data.attr.scale, y / data.attr.scale)
+
+        imgdata = canvas.toDataURL()
+
         $.ajax({
             url: "/api/demo",
             method: "POST",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({
-                "image":  data.imgurl.replace(/.*;base64,(.*)/mg, "\$1"),
+                "image":  imgdata.replace(/.*;base64,(.*)/mg, "\$1"),
                 "whitelist": "0123456789xX"
             })
         }).done(function(msg){
             console.log(msg)
+            alert(msg)
         });
     } )
 } )
