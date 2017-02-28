@@ -51,6 +51,10 @@ func DemoApi(ctx *iris.Context) {
 		Lk.Lock()
 		defer Lk.Unlock()
 		err = ioutil.WriteFile("assert/ocrkit-demo.jpg", imageData, 0600)
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(200, map[string]interface{}{"error": err})
+		}
 
 		imagick.Initialize()
 		defer imagick.Terminate()
@@ -60,18 +64,36 @@ func DemoApi(ctx *iris.Context) {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
+
+		mw.SetColorspace(imagick.COLORSPACE_GRAY)
 		mw.SharpenImage(4.0, 1.5)
 		mw.SigmoidalContrastImage(true, 1.8, 10.0)
+		/*
+			pw := imagick.NewPixelWand()
+			pw.SetAlpha(1.0)
+			pw.SetColor("white")
+			mw.SetImageBackgroundColor(pw)
+			mw.SetColorspace(imagick.COLORSPACE_GRAY)
+		*/
+
+		//ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_OCTAGON, "3")
+		//mw.MorphologyImage(imagick.MORPHOLOGY_SMOOTH, 3, ki)
+		//ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "1")
+		//mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, ki)
+
+		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x4")
+		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 1, rectangleKi)
+		squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
+		mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 6, squareKi)
+		mw.SetImageClipMask(mw)
+
 		err = mw.WriteImage("assert/ocrkit-demo.jpg")
-		if err != nil {
-			log.Println(err)
-			ctx.JSON(200, map[string]interface{}{"error": err})
-		}
 
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
+
 		var out string
 		if whitelist == "" {
 			out = gosseract.Must(gosseract.Params{
