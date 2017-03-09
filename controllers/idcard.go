@@ -77,15 +77,13 @@ func IDCardApi(ctx *iris.Context) {
 		mw.SigmoidalContrastImage(true, 1.8, 10.0)
 		mw.SetImageClipMask(mw)
 
-		err = mw.WriteImage("assert/ocrkit-demo.jpg")
-
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
 
 		IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
-		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`)
+		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`) //idCard Must
 		defer IDCardTess.Clear()
 
 		mw.SetImageFormat("JPEG")
@@ -100,7 +98,7 @@ func IDCardApi(ctx *iris.Context) {
 		IDCardTess.SetImagePix(pix)
 		out := IDCardTess.Text()
 		log.Println(out)
-		log.Println(IDCardTess.BoxText(0))
+		//log.Println(IDCardTess.BoxText(0))
 		ctx.JSON(200, map[string]interface{}{
 			"data": strings.Replace(strings.TrimSpace(out), " ", "", -1),
 		})
