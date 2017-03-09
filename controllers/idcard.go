@@ -70,6 +70,7 @@ func IDNameApi(ctx *iris.Context) {
 		mw.SetImageClipMask(mw)
 
 		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x2:1,0,1")
+		defer rectangleKi.Destroy()
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
@@ -148,6 +149,7 @@ func IDCardApi(ctx *iris.Context) {
 		mw.SetImageClipMask(mw)
 
 		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x1:1,0,1")
+		defer rectangleKi.Destroy()
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
