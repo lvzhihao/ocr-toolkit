@@ -92,7 +92,7 @@ func IDNameApi(ctx *iris.Context) {
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
 
-		mw.WriteImage("assert/ocrkit-name.jpg")
+		//mw.WriteImage("assert/ocrkit-name.jpg")
 
 		//IDNameTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
 		//IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`) //idCard Must
@@ -161,12 +161,14 @@ func IDCardApi(ctx *iris.Context) {
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
-		ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "1")
-		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, ki)
-		mw.SetImageClipMask(mw)
+		/*
+			ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "1")
+			mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, ki)
+			mw.SetImageClipMask(mw)
+		*/
 
-		mw.SharpenImage(4.0, 1.5)
-		mw.SigmoidalContrastImage(true, 3, 10.0)
+		mw.SharpenImage(3.0, 1.5)
+		mw.SigmoidalContrastImage(true, 0.5, 10.0)
 		mw.SetImageClipMask(mw)
 
 		if err != nil {
@@ -174,7 +176,7 @@ func IDCardApi(ctx *iris.Context) {
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
 
-		mw.WriteImage("assert/ocrkit-demo.jpg")
+		//mw.WriteImage("assert/ocrkit-demo.jpg")
 
 		IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
 		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`) //idCard Must
