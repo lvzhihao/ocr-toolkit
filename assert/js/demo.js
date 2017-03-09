@@ -54,7 +54,7 @@ $( function () {
         imgdata = canvas.toDataURL()
 
         $.ajax({
-            url: "/api/demo",
+            url: "/api/idcard",
             method: "POST",
             contentType: "application/json; charset=UTF-8",
             data: JSON.stringify({

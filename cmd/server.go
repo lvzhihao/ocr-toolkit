@@ -70,6 +70,9 @@ to quickly create a Cobra application.`,
 		app.Post("/api/demo", controllers.DemoApi)
 		app.Options("/api/demo", controllers.DemoApiOptions)
 
+		app.Post("/api/idcard", controllers.IDCardApi)
+		app.Options("/api/idcard", controllers.IDCardApiOptions)
+
 		app.Listen(viper.GetString("server_host") + ":" + viper.GetString("server_port"))
 	},
 }
