@@ -49,12 +49,6 @@ func IDNameApi(ctx *iris.Context) {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
-		Lk.Lock()
-		defer Lk.Unlock()
-		if err != nil {
-			log.Println(err)
-			ctx.JSON(200, map[string]interface{}{"error": err})
-		}
 
 		imagick.Initialize()
 		defer imagick.Terminate()
@@ -79,9 +73,11 @@ func IDNameApi(ctx *iris.Context) {
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
-		squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
-		mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 2, squareKi)
-		mw.SetImageClipMask(mw)
+		/*
+			squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
+			mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 2, squareKi)
+			mw.SetImageClipMask(mw)
+		*/
 
 		mw.SharpenImage(2.0, 1.5)
 		mw.SigmoidalContrastImage(true, 0.5, 10.0)
@@ -127,12 +123,6 @@ func IDCardApi(ctx *iris.Context) {
 		var imageData []byte
 		var err error
 		imageData, err = base64.StdEncoding.DecodeString(image["image"])
-		if err != nil {
-			log.Println(err)
-			ctx.JSON(200, map[string]interface{}{"error": err})
-		}
-		Lk.Lock()
-		defer Lk.Unlock()
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
