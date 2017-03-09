@@ -139,24 +139,26 @@ func IDCardApi(ctx *iris.Context) {
 		}
 		defer mw.Destroy()
 
-		pw := imagick.NewPixelWand()
-		pw.SetColor("gray")
-		mw.WhiteThresholdImage(pw)
-		mw.SetImageClipMask(mw)
+		/*
+			pw := imagick.NewPixelWand()
+			pw.SetColor("gray")
+			mw.WhiteThresholdImage(pw)
+			mw.SetImageClipMask(mw)
+		*/
 
 		mw.SetType(imagick.IMAGE_TYPE_GRAYSCALE)
 		mw.SetImageColorspace(imagick.COLORSPACE_GRAY)
 		mw.SetImageClipMask(mw)
 
-		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x2:1,0,1")
-		defer rectangleKi.Destroy()
-		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
-		mw.SetImageClipMask(mw)
-
 		/*
-			squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
-			mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 2, squareKi)
+			rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x2:1,0,1")
+			defer rectangleKi.Destroy()
+			mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 			mw.SetImageClipMask(mw)
+
+				squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
+				mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 2, squareKi)
+				mw.SetImageClipMask(mw)
 		*/
 
 		mw.SharpenImage(2.0, 1.5)
@@ -170,7 +172,7 @@ func IDCardApi(ctx *iris.Context) {
 
 		//mw.WriteImage("assert/ocrkit-demo.jpg")
 
-		//IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
+		IDCardTess.SetPageSegMode(tesseract.PSM_SINGLE_LINE)
 		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`) //idCard Must
 		defer IDCardTess.Clear()
 
