@@ -3,12 +3,25 @@ package controllers
 import (
 	"encoding/base64"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 
-	"github.com/otiai10/gosseract"
+	leptonica "github.com/GeertJohan/go.leptonica"
+	tesseract "github.com/GeertJohan/go.tesseract"
 	"gopkg.in/gographics/imagick.v2/imagick"
 	"gopkg.in/kataras/iris.v6"
 )
+
+var IDCardTess *tesseract.Tess
+
+func init() {
+	tessdata_prefix := os.Getenv("TESSDATA_PREFIX")
+	if tessdata_prefix == "" {
+		tessdata_prefix = "/usr/local/share"
+	}
+	IDCardTess, _ = tesseract.NewTess(filepath.Join(tessdata_prefix, "tessdata"), "eng")
+}
 
 func IDCardApiOptions(ctx *iris.Context) {
 	ctx.SetHeader("Access-Control-Allow-Origin", "*")
@@ -26,7 +39,6 @@ func IDCardApi(ctx *iris.Context) {
 		var imageData []byte
 		var err error
 		imageData, err = base64.StdEncoding.DecodeString(image["image"])
-		var whitelist = "0123456789xX"
 		if err != nil {
 			log.Println(err)
 			ctx.JSON(200, map[string]interface{}{"error": err})
@@ -57,7 +69,7 @@ func IDCardApi(ctx *iris.Context) {
 		mw.SetImageColorspace(imagick.COLORSPACE_GRAY)
 		mw.SetImageClipMask(mw)
 
-		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x1:1,0,1")
+		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x2:1,0,1")
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
@@ -72,20 +84,23 @@ func IDCardApi(ctx *iris.Context) {
 			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
 
-		var out string
-		if whitelist == "" {
-			out = gosseract.Must(gosseract.Params{
-				Src:       "assert/ocrkit-demo.jpg",
-				Languages: "eng+chi_sim",
-			})
-		} else {
-			out = gosseract.Must(gosseract.Params{
-				Src:       "assert/ocrkit-demo.jpg",
-				Whitelist: whitelist,
-				Languages: "eng+chi_sim",
-			})
+		IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
+		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`)
+		defer IDCardTess.Clear()
+
+		mw.SetImageFormat("JPEG")
+		blob := mw.GetImageBlob()
+		pix, err := leptonica.NewPixReadMem(&blob)
+
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(200, map[string]interface{}{"error": err})
 		}
+
+		IDCardTess.SetImagePix(pix)
+		out := IDCardTess.Text()
 		log.Println(out)
+		log.Println(IDCardTess.BoxText(0))
 		ctx.JSON(200, map[string]interface{}{
 			"data": strings.Replace(strings.TrimSpace(out), " ", "", -1),
 		})
