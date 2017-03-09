@@ -148,18 +148,18 @@ func IDCardApi(ctx *iris.Context) {
 		mw.SetImageColorspace(imagick.COLORSPACE_GRAY)
 		mw.SetImageClipMask(mw)
 
-		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x1:1,0,1")
+		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x2:1,0,1")
 		defer rectangleKi.Destroy()
 		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
 		mw.SetImageClipMask(mw)
 
 		/*
-			ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "1")
-			mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, ki)
+			squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
+			mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 2, squareKi)
 			mw.SetImageClipMask(mw)
 		*/
 
-		mw.SharpenImage(3.0, 1.5)
+		mw.SharpenImage(2.0, 1.5)
 		mw.SigmoidalContrastImage(true, 0.5, 10.0)
 		mw.SetImageClipMask(mw)
 
