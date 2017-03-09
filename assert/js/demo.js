@@ -63,8 +63,53 @@ $( function () {
             })
         }).done(function(msg){
             console.log(msg)
-            alert(msg)
+            //alert(msg)
         });
+
+        x = data.attr.canvas_width * 0.16
+        y = data.attr.canvas_height * 0.09
+        width = data.attr.canvas_width * 0.40
+        height = data.attr.canvas_height * 0.14
+        if (x + width > data.attr.canvas_width ) {
+            width = data.attr.canvas_width -x
+        }
+        if (y + height > data.attr.canvas_height ) {
+            height = data.attr.canvas_width -y
+        }
+
+
+        console.log(x, y, width, height)
+
+        var canvas_name = document.getElementById("canvas")
+        canvas_name.width = width 
+        canvas_name.height = height 
+        ctx = canvas_name.getContext('2d')
+        /*
+        ctx.globalAlpha = 1.0
+        ctx.fillStyle = 'white'
+        ctx.fillRect(0, 0, width, height)
+        ctx.save()
+        */
+        ctx.drawImage(document.getElementById('preview'), x, y, width, height, 0, 0, width, height );
+
+        trimCanvas = trim(canvas_name)
+        //console.log(canvas.width, canvas.height, x / data.attr.scale, y / data.attr.scale)
+
+        imgdata_1 = canvas_name.toDataURL()
+
+        $.ajax({
+            url: "/api/idname",
+            method: "POST",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify({
+                "image":  imgdata_1.replace(/.*;base64,(.*)/mg, "\$1"),
+            })
+        }).done(function(msg){
+            console.log(msg)
+            //alert(msg)
+        });
+
+
     } )
 } )
 //旋转	
