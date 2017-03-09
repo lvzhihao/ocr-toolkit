@@ -170,7 +170,7 @@ func IDCardApi(ctx *iris.Context) {
 
 		//mw.WriteImage("assert/ocrkit-demo.jpg")
 
-		IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
+		//IDCardTess.SetPageSegMode(tesseract.PSM_CIRCLE_WORD)
 		IDCardTess.SetVariable("tessedit_char_whitelist", `0123456789xX`) //idCard Must
 		defer IDCardTess.Clear()
 
