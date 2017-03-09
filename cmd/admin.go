@@ -21,20 +21,14 @@
 package cmd
 
 import (
-	"github.com/lvzhihao/ocr-toolkit/controllers"
+	"fmt"
+
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"gopkg.in/kataras/iris.v6"
-	"gopkg.in/kataras/iris.v6/adaptors/cors"
-	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
-	"gopkg.in/kataras/iris.v6/adaptors/view"
-	"gopkg.in/kataras/iris.v6/middleware/logger"
-	"gopkg.in/kataras/iris.v6/middleware/recover"
 )
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
-	Use:   "server",
+// adminCmd represents the admin command
+var adminCmd = &cobra.Command{
+	Use:   "admin",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -43,48 +37,22 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		app := iris.New()
-		app.Adapt(
-			iris.DevLogger(),
-			httprouter.New(),
-			view.HTML("./templates", ".html"),
-			cors.New(
-				cors.Options{
-					AllowedOrigins: []string{"*"},
-				},
-			),
-		)
-		app.Use(
-			recover.New(),
-			logger.New(logger.Config{
-				Status: true,
-				IP:     true,
-				Method: true,
-				Path:   true,
-			}),
-		)
-		app.StaticWeb("/public", "./bower_components/")
-		app.StaticWeb("/assert", "./assert/")
-
-		app.Get("/demo", controllers.Demo)
-		app.Post("/api/demo", controllers.DemoApi)
-		app.Options("/api/demo", controllers.DemoApiOptions)
-
-		app.Listen(viper.GetString("server_host") + ":" + viper.GetString("server_port"))
+		// TODO: Work your own magic here
+		fmt.Println("admin called")
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(serverCmd)
+	RootCmd.AddCommand(adminCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// adminCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// adminCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }

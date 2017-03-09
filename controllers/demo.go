@@ -28,6 +28,11 @@ func Demo(ctx *iris.Context) {
 	ctx.Render("demo/index.html", nil)
 }
 
+func DemoApiOptions(ctx *iris.Context) {
+	ctx.SetHeader("Access-Control-Allow-Origin", "*")
+	ctx.HTML(200, "")
+}
+
 func DemoApi(ctx *iris.Context) {
 
 	var image map[string]string
@@ -68,36 +73,49 @@ func DemoApi(ctx *iris.Context) {
 		//mw.ThresholdImageChannel(imagick.CHANNEL_RED, -0.5)
 		//mw.ThresholdImageChannel(imagick.CHANNEL_BLUE, 50.00)
 		//mw.ThresholdImageChannel(imagick.CHANNEL_GREEN, 50.00)
+
 		pw := imagick.NewPixelWand()
 		pw.SetColor("gray")
 		mw.WhiteThresholdImage(pw)
 		mw.SetImageClipMask(mw)
 
-		//mw.SetColorspace(imagick.COLORSPACE_GRAY)
-		//mw.SetImageClipMask(mw)
-
-		//		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x4")
-		//		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 1, rectangleKi)
-		//		mw.SetImageClipMask(mw)
-		//
 		/*
-			pw := imagick.NewPixelWand()
-			pw.SetAlpha(1.0)
-			pw.SetColor("white")
-			mw.SetImageBackgroundColor(pw)
-			mw.SetColorspace(imagick.COLORSPACE_GRAY)
+			pw = imagick.NewPixelWand()
+			pw.SetColor("red")
+			ta := imagick.NewPixelWand()
+			ta.SetColor("white")
+			mw.OpaquePaintImage(ta, pw, 0.3, true)
+			mw.SetImageClipMask(mw)
 		*/
+
+		//pw := imagick.NewPixelWand()
+		//pw.SetAlpha(1.0)
+		//pw.SetColor("white")
+		//mw.SetImageBackgroundColor(pw)
+
+		//mw.SetColorspace(imagick.COLORSPACE_GRAY)
+		log.Println(mw.SetType(imagick.IMAGE_TYPE_GRAYSCALE))
+		mw.SetImageColorspace(imagick.COLORSPACE_GRAY)
+		//err = mw.WriteImage("assert/ocrkit-demo-step1.jpg")
+		mw.SetImageClipMask(mw)
+
+		rectangleKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_RECTANGLE, "3x1:1,0,1")
+		mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, rectangleKi)
+		mw.SetImageClipMask(mw)
 
 		//ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_OCTAGON, "3")
 		//mw.MorphologyImage(imagick.MORPHOLOGY_SMOOTH, 3, ki)
 		//ki := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "1")
 		//mw.MorphologyImage(imagick.MORPHOLOGY_CLOSE, 2, ki)
 
-		squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
-		mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 1, squareKi)
-		mw.SetImageClipMask(mw)
+		//squareKi := imagick.NewKernelInfoBuiltIn(imagick.KERNEL_SQUARE, "")
+		//mw.MorphologyImage(imagick.MORPHOLOGY_ERODE, 6, squareKi)
+		//mw.SetImageClipMask(mw)
 
-		//mw.ThresholdImage(0)
+		//mw.ThresholdImage(0.5)
+		//mw.SetImageClipMask(mw)
+
+		//mw.SetColorspace(imagick.COLORSPACE_GRAY)
 		//mw.SetImageClipMask(mw)
 
 		mw.SharpenImage(4.0, 1.5)

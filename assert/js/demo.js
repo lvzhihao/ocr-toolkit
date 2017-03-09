@@ -3,7 +3,7 @@
 var uploadImage;
 $( function () {
     uploadImage = $( '#uploadImage' ).imageEditer( {
-        backImgUrl: '/public/h5-imgcrop/img/card_1.png'
+        backImgUrl: '/public/h5-imgcrop/img/card_3.png'
     } );
     $( '#upload' ).on( 'click', function () {
         uploadImage.imageEditer( 'upload' )
@@ -22,9 +22,9 @@ $( function () {
         y = $( '#preview' ).height() * 0.84 * -1
         height = $( '#preview' ).height() * 0.13
         */
-        x = data.attr.canvas_width * 0.3 
-        y = data.attr.canvas_height * 0.84 
-        width = data.attr.canvas_width * 0.6
+        x = data.attr.canvas_width * 0.32
+        y = data.attr.canvas_height * 0.78 
+        width = data.attr.canvas_width * 0.62
         height = data.attr.canvas_height * 0.13
         if (x + width > data.attr.canvas_width ) {
             width = data.attr.canvas_width -x
@@ -51,7 +51,7 @@ $( function () {
         trimCanvas = trim(canvas)
         //console.log(canvas.width, canvas.height, x / data.attr.scale, y / data.attr.scale)
 
-        imgdata = trimCanvas.toDataURL()
+        imgdata = canvas.toDataURL()
 
         $.ajax({
             url: "/api/demo",
