@@ -19,7 +19,7 @@ var IDNameTess *tesseract.Tess
 func init() {
 	tessdata_prefix := os.Getenv("TESSDATA_PREFIX")
 	if tessdata_prefix == "" {
-		tessdata_prefix = "/usr/local/share"
+		tessdata_prefix = "/usr/share/tesseract"
 	}
 	IDCardTess, _ = tesseract.NewTess(filepath.Join(tessdata_prefix, "tessdata"), "eng")
 	IDNameTess, _ = tesseract.NewTess(filepath.Join(tessdata_prefix, "tessdata"), "chi_sim")
