@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	leptonica "github.com/GeertJohan/go.leptonica"
-	tesseract "github.com/GeertJohan/go.tesseract"
+	leptonica "gopkg.in/GeertJohan/go.leptonica.v1"
+	tesseract "gopkg.in/GeertJohan/go.tesseract.v1"
 	"gopkg.in/gographics/imagick.v2/imagick"
 	"gopkg.in/kataras/iris.v6"
 )
